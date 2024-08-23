@@ -1,0 +1,32 @@
+body {
+    padding-bottom: 60px;
+}
+
+/* Sticky footer */
+.footer {
+    position: fixed;
+    height: 60px;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Remove underlines from links in footer */
+.footer a {
+    text-decoration: none;
+}
+
+/* Move github fork me badge to the right */
+.github-fork-ribbon {
+    position: absolute;
+    top: 58;
+    right: 0;
+    border: 0;
+}
+
+/* Hide the fork ribbon on small screens */
+@media (max-width: 768px) {
+    .github-fork-ribbon {
+        display: none;
+    }
+}
