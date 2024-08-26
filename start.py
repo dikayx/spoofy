@@ -3,7 +3,7 @@ import argparse
 from spoofable import app
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Enter your app description here")
+    parser = argparse.ArgumentParser(description="Check if your website is spoofable")
 
     # General options
     parser.add_argument("-d", "--debug", action="store_true", default=False,

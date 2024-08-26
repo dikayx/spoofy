@@ -1,5 +1,136 @@
-<h1>Result</h1>
-<div>
-    <p>You submitted the following data:</p>
-    <p>{{ data }}</p>
+<h1 class="text-center">Domain Check Results</h1>
+<h2 class="text-center">{{ domain }}</h2>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <ul class="list-group">
+            <!-- MX Record -->
+            <li class="list-group-item">
+                MX Record: {% if results.mx_record.valid %}
+                <span class="badge bg-success">Valid</span>
+                {% else %}
+                <span class="badge bg-danger">Invalid</span>
+                {% endif %}
+                <button
+                    class="btn btn-sm btn-outline-secondary float-end toggle-icon"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mxRecords"
+                    aria-expanded="false"
+                    aria-controls="mxRecords"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="mxRecords" class="collapse">
+                    <ul class="mt-2">
+                        {% for record in results.mx_record.records %}
+                        <li>{{ record }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+
+            <!-- SPF Record -->
+            <li class="list-group-item">
+                SPF Record: {% if "all" in results.spf_record.records %}
+                <span class="badge bg-warning text-dark">Vulnerable</span>
+                {% elif results.spf_record.valid %}
+                <span class="badge bg-success">Valid</span>
+                {% else %}
+                <span class="badge bg-danger">Invalid</span>
+                {% endif %}
+                <button
+                    class="btn btn-sm btn-outline-secondary float-end toggle-icon"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#spfRecord"
+                    aria-expanded="false"
+                    aria-controls="spfRecord"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="spfRecord" class="collapse">
+                    <pre>{{ results.spf_record.records }}</pre>
+                    {% if "all" in results.spf_record.records %}
+                    <div class="alert alert-warning mt-3" role="alert">
+                        The SPF record contains <code>all</code>, which is
+                        highly vulnerable and allows any server to send emails
+                        on behalf of this domain.
+                    </div>
+                    {% endif %}
+                </div>
+            </li>
+
+            <!-- DMARC Record -->
+            <li class="list-group-item">
+                DMARC Record: {% if "p=none" in results.dmarc_record.records %}
+                <span class="badge bg-warning text-dark">Vulnerable</span>
+                {% elif results.dmarc_record.valid %}
+                <span class="badge bg-success">Valid</span>
+                {% else %}
+                <span class="badge bg-danger">Invalid</span>
+                {% endif %}
+                <button
+                    class="btn btn-sm btn-outline-secondary float-end toggle-icon"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#dmarcRecord"
+                    aria-expanded="false"
+                    aria-controls="dmarcRecord"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="dmarcRecord" class="collapse">
+                    <pre>{{ results.dmarc_record.records }}</pre>
+                    {% if "p=none" in results.dmarc_record.records %}
+                    <div class="alert alert-warning mt-3" role="alert">
+                        This domain may be susceptible to spoofing. The DMARC
+                        policy is set to <code>p=none</code>, which does not
+                        provide protection against spoofing.
+                    </div>
+                    {% endif %}
+                </div>
+            </li>
+
+            <!-- DKIM Record -->
+            <li class="list-group-item">
+                DKIM Record: {% if results.dkim_record.valid %}
+                <span class="badge bg-success">Valid</span>
+                {% else %}
+                <span class="badge bg-danger">Invalid</span>
+                {% endif %}
+                <button
+                    class="btn btn-sm btn-outline-secondary float-end toggle-icon"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#dkimRecord"
+                    aria-expanded="false"
+                    aria-controls="dkimRecord"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="dkimRecord" class="collapse">
+                    <pre>{{ results.dkim_record.records }}</pre>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
+
+<div class="row justify-content-center mt-3">
+    <div class="col-md-8 text-center">
+        <a href="/" class="btn btn-primary">Check Another Domain</a>
+    </div>
+</div>
+
+<!-- Move to seperate script -->
+<script>
+    document.querySelectorAll(".toggle-icon").forEach((button) => {
+        button.addEventListener("click", function () {
+            const icon = this.querySelector("i");
+            icon.classList.toggle("bi-chevron-down");
+            icon.classList.toggle("bi-chevron-up");
+        });
+    });
+</script>
+
+<!-- Embed locally -->
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
+/>

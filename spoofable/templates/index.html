@@ -1,8 +1,7 @@
-{% extends "base.html" %} {% block title %}Spoofable | Domain Spoofing Test{%
+{% extends "base.html" %} {% block title %} Spoofable | Domain Spoofing Test {%
 endblock %} {% block content %}
 <div class="container-fluid pt-5">
-    {% if data %} {% include 'result.html' %} {% else %} {% include
+    {% if results %} {% include 'result.html' %} {% else %} {% include
     'submit.html' %} {% endif %}
 </div>
-
 {% endblock %}
