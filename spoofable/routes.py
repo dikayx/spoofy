@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+
+from spoofable.helpers import is_valid_domain
 from spoofable.utils import check_mx_record, check_spf_record, check_dmarc_record, check_dkim_record
 
 blueprint = Blueprint('routes', __name__)
@@ -6,7 +8,11 @@ blueprint = Blueprint('routes', __name__)
 @blueprint.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        url = request.form.get('url')
+        url = request.form['url'].strip()
+
+        if not is_valid_domain(url):
+            flash("Please enter a valid domain.", "danger")
+            return redirect(url_for('index'))
 
         # Perform checks and get records
         mx_valid, mx_records = check_mx_record(url)

@@ -1,7 +1,9 @@
-from unittest.mock import MagicMock
-from spoofable.utils import check_mx_record, check_spf_record, check_dmarc_record, check_dkim_record
-from unittest.mock import patch, MagicMock
 import dns.resolver
+
+from unittest.mock import MagicMock
+from unittest.mock import patch, MagicMock
+
+from spoofable.utils import check_mx_record, check_spf_record, check_dmarc_record, check_dkim_record
 
 
 @patch('dns.resolver.resolve')
