@@ -38,11 +38,11 @@ This results in an output like this:
 ---------- coverage: platform darwin, python 3.12.4-final-0 ----------
 Name                    Stmts   Miss  Cover
 -------------------------------------------
-spoofable/__init__.py       0      0   100%
-spoofable/app.py           19      0   100%
-spoofable/helpers.py        4      0   100%
-spoofable/routes.py        18      2    89%
-spoofable/utils.py         72      4    94%
+spoofy/__init__.py       0      0   100%
+spoofy/app.py           19      0   100%
+spoofy/helpers.py        4      0   100%
+spoofy/routes.py        18      2    89%
+spoofy/utils.py         72      4    94%
 -------------------------------------------
 TOTAL                     113      6    95%
 ```

@@ -1,27 +1,18 @@
-{% extends "base.html" %}
-
-{% block title %}
-    Spoofable | Domain Spoofing Test
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %} Spoofy | Domain Spoofing Test {%
+endblock %} {% block content %}
 <div class="container-fluid pt-5">
     <!-- Flash message block -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="alert alert-danger">
-                {% for category, message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="alert alert-danger">
+        {% for category, message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
 
     <!-- Display either the results or the form -->
-    {% if results %}
-        {% include 'result.html' %}
-    {% else %}
-        {% include 'submit.html' %}
-    {% endif %}
+    {% if results %} {% include 'result.html' %} {% else %} {% include
+    'submit.html' %} {% endif %}
 </div>
 {% endblock %}

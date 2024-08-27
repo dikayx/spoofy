@@ -26,7 +26,7 @@ def test_404_page(client):
 def test_index_title(client):
     # Test that the title of the index page is correct
     response = client.get("/")
-    title_regex = rb"<title>\s*Spoofable \| Domain Spoofing Test\s*</title>"
+    title_regex = rb"<title>\s*Spoofy \| Domain Spoofing Test\s*</title>"
     assert bool(re.search(title_regex, response.data))
 
 

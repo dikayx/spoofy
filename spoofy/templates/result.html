@@ -118,18 +118,8 @@
     </div>
 </div>
 
-<!-- TODO: Move to seperate script eventually -->
-<script>
-    document.querySelectorAll(".toggle-icon").forEach((button) => {
-        button.addEventListener("click", function () {
-            const icon = this.querySelector("i");
-            icon.classList.toggle("bi-chevron-down");
-            icon.classList.toggle("bi-chevron-up");
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/toggle.js') }}"></script>
 
-<!-- Embed locally -->
 <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"

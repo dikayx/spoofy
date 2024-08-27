@@ -1,10 +1,10 @@
 version: "3"
 
 services:
-    spoofable:
-        container_name: spoofable
+    spoofy:
+        container_name: spoofy
         build: .
-        image: spoofable
+        image: spoofy
         restart: unless-stopped
         ports:
             - "8080:8080"
