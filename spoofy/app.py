@@ -5,7 +5,7 @@ import sys
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 
-from spoofable import routes
+from spoofy import routes
 
 
 def create_app():

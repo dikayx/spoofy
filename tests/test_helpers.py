@@ -1,4 +1,4 @@
-from spoofable.helpers import is_valid_domain
+from spoofy.helpers import is_valid_domain
 
 
 def test_is_valid_domain():

@@ -1,18 +1,24 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
-from spoofable.helpers import is_valid_domain
-from spoofable.utils import check_mx_record, check_spf_record, check_dmarc_record, check_dkim_record
+from spoofy.helpers import is_valid_domain
+from spoofy.utils import (
+    check_mx_record,
+    check_spf_record,
+    check_dmarc_record,
+    check_dkim_record,
+)
 
-blueprint = Blueprint('routes', __name__)
+blueprint = Blueprint("routes", __name__)
 
-@blueprint.route('/', methods=['GET', 'POST'])
+
+@blueprint.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'POST':
-        url = request.form['url'].strip()
+    if request.method == "POST":
+        url = request.form["url"].strip()
 
         if not is_valid_domain(url):
             flash("Please enter a valid domain.", "danger")
-            return redirect(url_for('index'))
+            return redirect(url_for("index"))
 
         # Perform checks and get records
         mx_valid, mx_records = check_mx_record(url)
@@ -31,7 +37,7 @@ def index():
             "dkim_record": {"valid": dkim_valid, "records": dkim_record},
         }
 
-        return render_template('index.html', domain=url, results=results)
+        return render_template("index.html", domain=url, results=results)
 
     # Landing page
-    return render_template('index.html')
+    return render_template("index.html")

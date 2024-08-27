@@ -8,6 +8,18 @@
         <title>
             {% block title %}Spoofable | Domain Spoofing Test{% endblock %}
         </title>
+        <!-- CSP -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="
+            default-src 'self'; 
+            script-src 'self' 'unsafe-inline'; 
+            style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+            img-src 'self' data: https://github.blog;
+            font-src 'self' https://cdnjs.cloudflare.com;
+            connect-src 'self'; 
+            frame-src 'self';"
+        />
         <!-- Custom styles -->
         <link rel="stylesheet" href="../static/css/style.css" />
         <!-- Bootstrap CSS -->

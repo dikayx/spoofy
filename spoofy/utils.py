@@ -8,14 +8,11 @@ import re
 
 def check_mx_record(domain):
     try:
-        answers = dns.resolver.resolve(domain, 'MX')
-        mx_records = [str(r.exchange).rstrip('.') for r in answers]
+        answers = dns.resolver.resolve(domain, "MX")
+        mx_records = [str(r.exchange).rstrip(".") for r in answers]
         invalid_responses = {"", ".", "localhost"}  # Add more if needed
 
-        valid_mx_records = [
-            mx for mx in mx_records
-            if mx not in invalid_responses
-        ]
+        valid_mx_records = [mx for mx in mx_records if mx not in invalid_responses]
 
         valid = len(valid_mx_records) > 0
 
@@ -27,14 +24,16 @@ def check_mx_record(domain):
     except Exception as e:
         mx_records = [str(e)]
         valid = False
-    
+
     return valid, mx_records
 
 
 def check_spf_record(domain):
     try:
-        answers = dns.resolver.resolve(domain, 'TXT')
-        spf_record = next((r.to_text() for r in answers if 'v=spf1' in r.to_text()), None)
+        answers = dns.resolver.resolve(domain, "TXT")
+        spf_record = next(
+            (r.to_text() for r in answers if "v=spf1" in r.to_text()), None
+        )
         valid = True
         if spf_record:
             if re.search(r"\s*(\+all|\~all|\-all)", spf_record, re.IGNORECASE):
@@ -50,8 +49,10 @@ def check_spf_record(domain):
 
 def check_dmarc_record(domain):
     try:
-        answers = dns.resolver.resolve(f'_dmarc.{domain}', 'TXT')
-        dmarc_record = next((r.to_text() for r in answers if 'v=DMARC1' in r.to_text()), None)
+        answers = dns.resolver.resolve(f"_dmarc.{domain}", "TXT")
+        dmarc_record = next(
+            (r.to_text() for r in answers if "v=DMARC1" in r.to_text()), None
+        )
         valid = False
         assessment = "No DMARC record found"
         if dmarc_record:
@@ -74,9 +75,17 @@ def check_dmarc_record(domain):
 def check_dkim_record(domain):
     # List of common selectors to check
     common_selectors = [
-        "default", "google", "mail", "key1", "dkim", "s1", "s2", "k1", "k2"
+        "default",
+        "google",
+        "mail",
+        "key1",
+        "dkim",
+        "s1",
+        "s2",
+        "k1",
+        "k2",
     ]
-    
+
     valid = False
     dkim_record = "No valid DKIM record found"
 
@@ -84,8 +93,10 @@ def check_dkim_record(domain):
         for selector in common_selectors:
             dkim_domain = f"{selector}._domainkey.{domain}"
             try:
-                answers = dns.resolver.resolve(dkim_domain, 'TXT')
-                dkim_record = next((r.to_text() for r in answers if 'v=DKIM1' in r.to_text()), None)
+                answers = dns.resolver.resolve(dkim_domain, "TXT")
+                dkim_record = next(
+                    (r.to_text() for r in answers if "v=DKIM1" in r.to_text()), None
+                )
                 if dkim_record:
                     valid = True
                     break  # Stop checking once a valid record is found
