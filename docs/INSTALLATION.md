@@ -1,6 +1,6 @@
 # Installation
 
-Spoofy is a simple web app that allows you to test a domain's SPF, DKIM, and DMARC records. You can either run the app directly on your machine or use Docker to run it in a container.
+Spoofy is a simple web app that allows you to test a domain's MX, SPF, DKIM, and DMARC records. You can either run the app directly on your machine or use Docker to run it in a container.
 
 This installation guide will show you how to set up the app locally or using Docker. There are setup scripts available for Mac & Linux [setup.sh](../setup.sh) and Windows [setup.bat](../setup.bat) that will guide you through the installation process. You can find them in the root directory of the repository.
 
