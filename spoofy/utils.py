@@ -1,11 +1,12 @@
-import dns.resolver
 import dns.dnssec
 import dns.message
 import dns.query
 import dns.rdatatype
+import dns.resolver
 import re
-import ssl
 import socket
+import ssl
+
 from datetime import datetime
 
 
@@ -20,7 +21,7 @@ def check_mx_record(domain) -> tuple:
     try:
         answers = dns.resolver.resolve(domain, "MX")
         mx_records = [str(r.exchange).rstrip(".") for r in answers]
-        invalid_responses = {"", ".", "localhost"}  # Add more if needed
+        invalid_responses = {"", ".", "localhost"}
 
         valid_mx_records = [mx for mx in mx_records if mx not in invalid_responses]
 
@@ -104,7 +105,6 @@ def check_dkim_record(domain) -> tuple:
 
     :return: A tuple containing a boolean indicating if the DKIM record is valid and the DKIM record.
     """
-    # List of common selectors to check
     common_selectors = [
         "default",
         "google",
@@ -130,9 +130,9 @@ def check_dkim_record(domain) -> tuple:
                 )
                 if dkim_record:
                     valid = True
-                    break  # Stop checking once a valid record is found
+                    break
             except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
-                continue  # Move on to the next selector if no record is found
+                continue
     except Exception as e:
         dkim_record = str(e)
         valid = False
@@ -159,7 +159,6 @@ def check_ssl_certificate(domain) -> tuple:
                 subject = dict(x[0] for x in cert["subject"])
                 common_name = subject.get("commonName", "")
 
-                # Extract Subject Alternative Names (SANs)
                 san_list = []
                 if "subjectAltName" in cert:
                     san_list = [name[1] for name in cert["subjectAltName"]]

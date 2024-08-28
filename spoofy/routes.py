@@ -21,7 +21,6 @@ def index():
             flash("Please enter a valid domain.", "danger")
             return redirect(url_for("index"))
 
-        # Perform checks and get records
         mx_valid, mx_records = check_mx_record(url)
         spf_valid, spf_record = check_spf_record(url)
         dmarc_valid, dmarc_record, dmarc_assessment = check_dmarc_record(url)
