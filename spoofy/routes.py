@@ -6,6 +6,7 @@ from spoofy.utils import (
     check_spf_record,
     check_dmarc_record,
     check_dkim_record,
+    check_ssl_certificate,
 )
 
 blueprint = Blueprint("routes", __name__)
@@ -25,6 +26,7 @@ def index():
         spf_valid, spf_record = check_spf_record(url)
         dmarc_valid, dmarc_record, dmarc_assessment = check_dmarc_record(url)
         dkim_valid, dkim_record = check_dkim_record(url)
+        ssl_valid, ssl_message = check_ssl_certificate(url)
 
         results = {
             "mx_record": {"valid": mx_valid, "records": mx_records},
@@ -35,6 +37,7 @@ def index():
                 "assessment": dmarc_assessment,
             },
             "dkim_record": {"valid": dkim_valid, "records": dkim_record},
+            "ssl_certificate": {"valid": ssl_valid, "message": ssl_message},
         }
 
         return render_template("index.html", domain=url, results=results)

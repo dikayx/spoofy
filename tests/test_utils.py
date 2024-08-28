@@ -8,6 +8,7 @@ from spoofy.utils import (
     check_spf_record,
     check_dmarc_record,
     check_dkim_record,
+    check_ssl_certificate,
 )
 
 
@@ -165,3 +166,29 @@ def test_check_dkim_record_multiple_selectors(mock_dns_resolver):
     valid, dkim_record = check_dkim_record("example.com")
     assert valid is True
     assert "v=DKIM1" in dkim_record
+
+
+@patch("requests.get")
+def test_ssl_certificate_valid(mock_requests_get):
+    # Simulate a valid SSL certificate
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"status": "valid"}
+    mock_requests_get.return_value = mock_response
+
+    valid, message = check_ssl_certificate("example.com")
+    assert valid is True
+    assert "Valid" in message
+
+
+@patch("requests.get")
+def test_ssl_certificate_invalid(mock_requests_get):
+    # Simulate an invalid SSL certificate
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"status": "invalid"}
+    mock_requests_get.return_value = mock_response
+
+    valid, message = check_ssl_certificate("expired.badssl.com")
+    assert valid is False
+    assert "certificate has expired" in message

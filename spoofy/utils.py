@@ -4,9 +4,19 @@ import dns.message
 import dns.query
 import dns.rdatatype
 import re
+import ssl
+import socket
+from datetime import datetime
 
 
-def check_mx_record(domain):
+def check_mx_record(domain) -> tuple:
+    """
+    Check if the domain has valid MX records.
+
+    :param domain: The domain to check as a string.
+
+    :return: A tuple containing a boolean indicating if the MX records are valid and a list of MX records.
+    """
     try:
         answers = dns.resolver.resolve(domain, "MX")
         mx_records = [str(r.exchange).rstrip(".") for r in answers]
@@ -28,7 +38,14 @@ def check_mx_record(domain):
     return valid, mx_records
 
 
-def check_spf_record(domain):
+def check_spf_record(domain) -> tuple:
+    """
+    Check if the domain has a valid SPF record.
+
+    :param domain: The domain to check as a string.
+
+    :return: A tuple containing a boolean indicating if the SPF record is valid and the SPF record.
+    """
     try:
         answers = dns.resolver.resolve(domain, "TXT")
         spf_record = next(
@@ -47,7 +64,14 @@ def check_spf_record(domain):
     return valid, spf_record
 
 
-def check_dmarc_record(domain):
+def check_dmarc_record(domain) -> tuple:
+    """
+    Check if the domain has a valid DMARC record.
+
+    :param domain: The domain to check as a string.
+
+    :return: A tuple containing a boolean indicating if the DMARC record is valid, the DMARC record, and an assessment.
+    """
     try:
         answers = dns.resolver.resolve(f"_dmarc.{domain}", "TXT")
         dmarc_record = next(
@@ -72,7 +96,14 @@ def check_dmarc_record(domain):
     return valid, dmarc_record, assessment
 
 
-def check_dkim_record(domain):
+def check_dkim_record(domain) -> tuple:
+    """
+    Check if the domain has a valid DKIM record. Only common selectors are checked as per RFC 6376.
+
+    :param domain: The domain to check as a string.
+
+    :return: A tuple containing a boolean indicating if the DKIM record is valid and the DKIM record.
+    """
     # List of common selectors to check
     common_selectors = [
         "default",
@@ -107,3 +138,58 @@ def check_dkim_record(domain):
         valid = False
 
     return valid, dkim_record
+
+
+def check_ssl_certificate(domain) -> tuple:
+    """
+    Check if the domain has a valid SSL certificate by connecting to the domain over HTTPS.
+    The certificate is considered valid if the common name or any of the
+    Subject Alternative Names (SANs) match the domain.
+
+    :param domain: The domain to check as a string.
+
+    :return: A tuple containing a boolean indicating if the SSL certificate is valid and a message.
+    """
+    try:
+        context = ssl.create_default_context()
+        with socket.create_connection((domain, 443), timeout=5) as sock:
+            with context.wrap_socket(sock, server_hostname=domain) as ssock:
+                cert = ssock.getpeercert()
+
+                subject = dict(x[0] for x in cert["subject"])
+                common_name = subject.get("commonName", "")
+
+                # Extract Subject Alternative Names (SANs)
+                san_list = []
+                if "subjectAltName" in cert:
+                    san_list = [name[1] for name in cert["subjectAltName"]]
+
+                issuer = dict(x[0] for x in cert["issuer"])
+                issuer_common_name = issuer.get("commonName", "")
+
+                not_before = cert.get("notBefore")
+                not_after = cert.get("notAfter")
+                validity_start = datetime.strptime(not_before, "%b %d %H:%M:%S %Y %Z")
+                validity_end = datetime.strptime(not_after, "%b %d %H:%M:%S %Y %Z")
+
+                domain_pattern = re.compile(
+                    rf"^(?:\*\.)?{re.escape(domain)}$", re.IGNORECASE
+                )
+
+                if domain_pattern.match(common_name) or any(
+                    domain_pattern.match(san) for san in san_list
+                ):
+                    return (
+                        True,
+                        f"Issued by: {issuer_common_name}. Valid from {validity_start} to {validity_end}",
+                    )
+                else:
+                    return (
+                        False,
+                        f"Certificate common name {common_name} or SANs {san_list} do not match domain {domain}",
+                    )
+
+    except ssl.SSLCertVerificationError as e:
+        return False, f"Certificate verification error: {str(e)}"
+    except Exception as e:
+        return False, f"Certificate error: {str(e)}"
