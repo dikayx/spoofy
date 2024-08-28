@@ -108,6 +108,27 @@
                     <pre>{{ results.dkim_record.records }}</pre>
                 </div>
             </li>
+
+            <!-- SSL Certificate -->
+            <li class="list-group-item">
+                SSL Certificate: {% if results.ssl_certificate.valid %}
+                <span class="badge bg-success">Valid</span>
+                {% else %}
+                <span class="badge bg-danger">Invalid</span>
+                {% endif %}
+                <button
+                    class="btn btn-sm btn-outline-secondary float-end toggle-icon"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sslCertificate"
+                    aria-expanded="false"
+                    aria-controls="sslCertificate"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+                <div id="sslCertificate" class="collapse">
+                    <pre>{{ results.ssl_certificate.message }}</pre>
+                </div>
+            </li>
         </ul>
     </div>
 </div>
@@ -120,7 +141,4 @@
 
 <script src="{{ url_for('static', filename='js/toggle.js') }}"></script>
 
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
-/>
+<link rel="stylesheet" href="../static/css/bootstrap-icons.min.css" />
