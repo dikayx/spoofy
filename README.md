@@ -10,7 +10,9 @@ Spoofy is a small web app that allows you to test a domain's MX, SPF, DKIM, and 
 
 ## Features
 
--   📧 Check SPF, DKIM, and DMARC records
+-   📧 Check MX, SPF, DKIM, and DMARC records
+-   🔒 Check the SSL status of the domain
+-   🔍 View detailed information about each record
 -   📋 Get an overview of the records' status
 -   🛡️ Get recommendations for each record
 
