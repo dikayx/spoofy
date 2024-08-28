@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
 [![Build Status](https://github.com/dikayx/spoofy/actions/workflows/python-app.yml/badge.svg)](https://github.com/dikayx/spoofy/actions/workflows/python-app.yml)
 
-Spoofy is a small web app that allows you to test a domain's MX, SPF, DKIM, and DMARC records. Based on the results, you can see if your domain is properly configured or potentially vulnerable to spoofing.
+Spoofy is a small web app that allows you to test a domain's MX, SPF, DKIM, and DMARC records as well as its SSL status. It provides an easy way to check if your domain is properly configured to prevent email spoofing and phishing attacks.
 
 ![Screenshot of the app](assets/screenshot.png)
 
